@@ -11,48 +11,80 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from time import sleep
 
+import pyautogui
 
 def removeElement():
-  sleep(1)
+  try:
+    script = """
+      btn_area = document.getElementsByClassName('btn_area');
+      btn_close = document.getElementsByClassName('btn_close');
+      btn_area[2].style.display = 'none';
+      btn_close[0].style.display = 'none';
+    """
+    driver.execute_script(script)
+  except:
+    print('removeElement Error\n')
+
+def faceNorth():
+  try:
+    element = WebDriverWait(driver, delay).until(
+      EC.presence_of_element_located((By.CLASS_NAME , 'btn_compass'))
+    )
+    script = """
+      btn_compass = document.getElementsByClassName('btn_compass');
+      btn_compass[0].click();
+    """
+    driver.execute_script(script)
+  except:
+    print('faceNorth Error\n')
+
+def initCrawler():
+  WebDriverWait(driver, delay).until(
+    EC.presence_of_element_located((By.CLASS_NAME , 'btn_area'))
+  )
+  removeElement()
+  faceNorth()
+
+def moveUpCamera():
   script = """
-    btn_area = document.getElementsByClassName('btn_area');
-    btn_close = document.getElementsByClassName('btn_close');
-    btn_area[2].style.display = 'none';
-    btn_close[0].style.display = 'none';
+    btn_top = document.getElementsByClassName('btn_top');
+    btn_top[0].click();
   """
   driver.execute_script(script)
   
-URL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha&p=W24Pz_oAOSKO7Jjias5jaA,-74.82,-5.43,80,Float'
+def moveLeftCamera():
+  script = """
+    btn_left = document.getElementsByClassName('btn_left');
+    btn_left[0].click();
+  """
+  driver.execute_script(script)
+  
+def goFront():
+  # 모니터 전체 사이즈
+  # 제 컴퓨터에 최적화되어있습니다!!
+  width, height = pyautogui.size()
+  print('monitor: {0}, {1}'.format(width, height))
+  mouseX, mouseY = pyautogui.position()
+  print('mouse: {0}, {1}'.format(mouseX, mouseY))
+  pyautogui.moveTo(width / 2, height * 0.8)
+
 
 # log = open('url_log_data.txt', 'w')
 # log.writelines(driver.current_url)
+def main():
+  URL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha&p=W24Pz_oAOSKO7Jjias5jaA,-74.82,-5.43,80,Float'
 
-driver = webdriver.Chrome(executable_path='chromedriver')
-driver.maximize_window()
-driver.get(url=URL)
+  driver = webdriver.Chrome(executable_path='chromedriver')
+  driver.maximize_window()
+  driver.get(url=URL)
 
-delay = 3 # seconds
+  delay = 3 # seconds
 
-element = WebDriverWait(driver, delay).until(
-  EC.presence_of_element_located((By.CLASS_NAME , 'btn_area'))
-)
+  initCrawler()
 
-removeElement()
-
-try:
-  element = WebDriverWait(driver, delay).until(
-    EC.presence_of_element_located((By.CLASS_NAME , 'btn_compass'))
-  )
-  script = """
-    btn_compass = document.getElementsByClassName('btn_compass');
-    btn_compass[0].click();
-  """
-  driver.execute_script(script)
-  sleep(0.)
-
-  # moveLeftCamera()
-  # moveUpCamera()
-  driver.save_screenshot("screenshot.png")
-  print("Capture!")
-except TimeoutException:
-  print("Loading took too much time!")
+  try:
+    # driver.save_screenshot("screenshot.png")
+    # print("Capture!")
+    goFront()
+  except TimeoutException:
+    print("Loading took too much time!")
