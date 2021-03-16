@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import selenium
 from selenium import webdriver
 # from selenium.webdriver import ActionChains
@@ -11,7 +13,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from time import sleep
 
+import platform
+
 import pyautogui
+
+URL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha&p=W24Pz_oAOSKO7Jjias5jaA,-74.82,-5.43,80,Float'
+
+delay = 30 # seconds
+
+if platform.system() == 'Darwin': # MAC
+  driver = webdriver.Chrome(executable_path='./chromedriver 2')
+elif platform.system() == 'Windows':
+  driver = webdriver.Chrome(executable_path='chromedriver')
+driver.maximize_window()
+driver.get(url=URL)
 
 def removeElement():
   try:
@@ -45,6 +60,9 @@ def initCrawler():
   removeElement()
   faceNorth()
 
+def saveScreenShot(version):
+  driver.save_screenshot("screenshot"+ version +".png")
+
 def moveUpCamera():
   script = """
     btn_top = document.getElementsByClassName('btn_top');
@@ -67,24 +85,32 @@ def goFront():
   mouseX, mouseY = pyautogui.position()
   print('mouse: {0}, {1}'.format(mouseX, mouseY))
   pyautogui.moveTo(width / 2, height * 0.8)
+  print('mouse: {0}, {1}'.format(mouseX, mouseY))
+  pyautogui.click()
 
+def action(location):
+  for i in range(3):
+    for j in range(8):
+      version = location + str(i) + '_' + str(j)
+      saveScreenShot()
+      moveLeftCamera()
+    moveUpCamera()
+  goFront()
 
 # log = open('url_log_data.txt', 'w')
 # log.writelines(driver.current_url)
 def main():
-  URL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha&p=W24Pz_oAOSKO7Jjias5jaA,-74.82,-5.43,80,Float'
 
-  driver = webdriver.Chrome(executable_path='chromedriver')
-  driver.maximize_window()
-  driver.get(url=URL)
-
-  delay = 3 # seconds
 
   initCrawler()
 
   try:
-    # driver.save_screenshot("screenshot.png")
-    # print("Capture!")
+    
+    # 
+    print("Capture!")
+    sleep(5)
     goFront()
   except TimeoutException:
     print("Loading took too much time!")
+
+main()
