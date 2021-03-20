@@ -21,6 +21,8 @@ URL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha
 
 delay = 30 # seconds
 
+log = []
+
 if platform.system() == 'Darwin': # MAC
   driver = webdriver.Chrome(executable_path='./chromedriver 2')
 elif platform.system() == 'Windows':
@@ -84,18 +86,18 @@ def goFront():
   print('monitor: {0}, {1}'.format(width, height))
   mouseX, mouseY = pyautogui.position()
   print('mouse: {0}, {1}'.format(mouseX, mouseY))
-  pyautogui.moveTo(width / 2, height * 0.8)
+  pyautogui.moveTo(width / 2, height * 0.75)
   print('mouse: {0}, {1}'.format(mouseX, mouseY))
   pyautogui.click()
 
 def action(location):
+  goFront()
   for i in range(3):
     for j in range(8):
       version = location + str(i) + '_' + str(j)
       saveScreenShot()
       moveLeftCamera()
     moveUpCamera()
-  goFront()
 
 # log = open('url_log_data.txt', 'w')
 # log.writelines(driver.current_url)
@@ -105,11 +107,21 @@ def main():
   initCrawler()
 
   try:
-    
-    # 
-    print("Capture!")
-    sleep(5)
+    a = driver.current_url
+    print(a)
+    i = a.find('&')
+    print('------')
+    print(a[25:i])
     goFront()
+    sleep(5)
+    a = driver.current_url
+    print(a)
+    i = a.find('&')
+    print('------')
+    print(a[25:i])
+
+
+    driver.current_url
   except TimeoutException:
     print("Loading took too much time!")
 
