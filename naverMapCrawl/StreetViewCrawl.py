@@ -61,17 +61,6 @@ def faceNorth():
   except:
     print('faceNorth Error\n')
 
-def initCrawler():
-  WebDriverWait(driver, delay).until(
-    EC.presence_of_element_located((By.CLASS_NAME , 'btn_area'))
-  )
-  removeElement()
-  faceNorth()
-
-def saveScreenShot(version):
-  save_url = DIR + version +".png"
-  driver.save_screenshot(save_url)
-
 def moveUpCamera():
   script = """
     btn_top = document.getElementsByClassName('btn_top');
@@ -88,6 +77,23 @@ def moveLeftCamera():
   driver.execute_script(script)
   sleep(1)
   
+def initCrawler():
+  WebDriverWait(driver, delay).until(
+    EC.presence_of_element_located((By.CLASS_NAME , 'btn_area'))
+  )
+  removeElement()
+  faceNorth()
+  moveLeftCamera()
+  moveLeftCamera()
+  log.append('14369454.2751015,4195763.4417014,16,0,0,0,dha')
+  log.append('14369445.9148015,4195933.0363579,16,0,0,0,dha')
+  log.append('14368732.9006470,4195452.9162740,16,0,0,0,dha')
+  log.append('14369437.5545015,4195172.2490607,16,0,0,0,dha')
+
+def saveScreenShot(version):
+  save_url = DIR + version +".png"
+  driver.save_screenshot(save_url)
+
 def wait_for_correct_current_url(prev_url, start, end):
   while True:
     if driver.current_url[start:end] != prev_url:
