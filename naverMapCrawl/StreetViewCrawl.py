@@ -17,18 +17,22 @@ import platform
 
 import pyautogui
 
-URL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha&p=W24Pz_oAOSKO7Jjias5jaA,-74.82,-5.43,80,Float'
+startURL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha&p=W24Pz_oAOSKO7Jjias5jaA,-74.82,-5.43,80,Float'
 
 delay = 30 # seconds
 
 log = []
+
+DIR = './IMG/'
+
+log_file = open("url_log_data.txt", "a")
 
 if platform.system() == 'Darwin': # MAC
   driver = webdriver.Chrome(executable_path='./chromedriver 2')
 elif platform.system() == 'Windows':
   driver = webdriver.Chrome(executable_path='chromedriver')
 driver.maximize_window()
-driver.get(url=URL)
+driver.get(url=startURL)
 
 def removeElement():
   try:
@@ -63,7 +67,7 @@ def initCrawler():
   faceNorth()
 
 def saveScreenShot(version):
-  driver.save_screenshot("screenshot"+ version +".png")
+  driver.save_screenshot(DIR + "screenshot"+ version +".png")
 
 def moveUpCamera():
   script = """
@@ -71,6 +75,7 @@ def moveUpCamera():
     btn_top[0].click();
   """
   driver.execute_script(script)
+  sleep(1)
   
 def moveLeftCamera():
   script = """
@@ -78,24 +83,54 @@ def moveLeftCamera():
     btn_left[0].click();
   """
   driver.execute_script(script)
+  sleep(1)
   
+def wait_for_correct_current_url(prev_url, start, end):
+  while True:
+    if driver.current_url[start:end] != prev_url:
+      break
+  # WebDriverWait(driver, delay).until(lambda driver: driver.current_url == prev_url)
+
 def goFront():
   # 모니터 전체 사이즈
   # 제 컴퓨터에 최적화되어있습니다!!
   width, height = pyautogui.size()
-  print('monitor: {0}, {1}'.format(width, height))
-  mouseX, mouseY = pyautogui.position()
-  print('mouse: {0}, {1}'.format(mouseX, mouseY))
-  pyautogui.moveTo(width / 2, height * 0.75)
-  print('mouse: {0}, {1}'.format(mouseX, mouseY))
+  pyautogui.moveTo(width / 2, height * 0.81)
+  sleep(0.02)
   pyautogui.click()
+  sleep(1)
 
-def action(location):
+def goBack():
+  for _ in range(4):
+    moveLeftCamera()
   goFront()
+
+def lookBack():
+  for _ in range(4):
+    moveLeftCamera()
+    sleep(0.1)
+
+def action():
+  # print(log)
+  location =  driver.current_url
+  start = location.find('c=')
+  end = location.find('&')
+  if location[start + 2 : end] in log:
+    return location[start + 2 : end]
+  else:
+    log.append(location[start + 2 : end])
+    log_file.writelines(location[start + 2 : end] + "\n")
+
+  goFront()
+  wait_for_correct_current_url(location, start, end)
   for i in range(3):
     for j in range(8):
-      version = location + str(i) + '_' + str(j)
-      saveScreenShot()
+      version = location[start + 2 : end] + str(i) + '_' + str(j)
+      saveScreenShot(version)
+      prev_location = action()
+      goBack()
+      wait_for_correct_current_url(prev_location, start, end)
+      lookBack()
       moveLeftCamera()
     moveUpCamera()
 
@@ -107,21 +142,11 @@ def main():
   initCrawler()
 
   try:
-    a = driver.current_url
-    print(a)
-    i = a.find('&')
-    print('------')
-    print(a[25:i])
-    goFront()
-    sleep(5)
-    a = driver.current_url
-    print(a)
-    i = a.find('&')
-    print('------')
-    print(a[25:i])
-
-
-    driver.current_url
+    # a = driver.current_url
+    # start = a.find('&p=')
+    # end = a.find('Float')
+    # print(a[start + 26: end - 1])
+    action()
   except TimeoutException:
     print("Loading took too much time!")
 
