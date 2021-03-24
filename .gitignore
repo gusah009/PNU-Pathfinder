@@ -106,4 +106,5 @@ lint/tmp/
 ############## Android gitignore End ###############
 ############## Selenium Crwal gitignore Start ###############
 chromedriver.exe
+*.png
 ############## Selenium Crwal gitignore End ###############
