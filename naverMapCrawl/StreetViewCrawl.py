@@ -17,7 +17,7 @@ import platform
 
 import pyautogui
 
-startURL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha&p=W24Pz_oAOSKO7Jjias5jaA,-74.82,-5.43,80,Float'
+startURL = 'https://map.naver.com/v5/?c=14369619.0924437,4195394.3941742,15,0,0,0,dha&p=QT1tMDk_XIdEotJVEo6ClQ,-90,0,80,Float'
 
 index = 0
 
@@ -43,6 +43,12 @@ def removeElement():
       btn_close = document.getElementsByClassName('btn_close');
       btn_area[2].style.display = 'none';
       btn_close[0].style.display = 'none';
+      bottom_area = document.getElementsByClassName('panorama_location_area')[0].parentNode.parentNode.childNodes;
+      console.log(bottom_area);
+      bottom_area[4].remove();
+      bottom_area[3].remove();
+      bottom_area[2].remove();
+      bottom_area[1].remove();
     """
     driver.execute_script(script)
   except:
@@ -50,7 +56,7 @@ def removeElement():
 
 def faceNorth():
   try:
-    element = WebDriverWait(driver, delay).until(
+    WebDriverWait(driver, delay).until(
       EC.presence_of_element_located((By.CLASS_NAME , 'btn_compass'))
     )
     script = """
@@ -58,6 +64,7 @@ def faceNorth():
       btn_compass[0].click();
     """
     driver.execute_script(script)
+    sleep(0.7)
   except:
     print('faceNorth Error\n')
 
@@ -67,7 +74,7 @@ def moveUpCamera():
     btn_top[0].click();
   """
   driver.execute_script(script)
-  sleep(1)
+  sleep(0.7)
   
 def moveLeftCamera():
   script = """
@@ -75,31 +82,8 @@ def moveLeftCamera():
     btn_left[0].click();
   """
   driver.execute_script(script)
-  sleep(1)
+  sleep(0.7)
   
-def initCrawler():
-  WebDriverWait(driver, delay).until(
-    EC.presence_of_element_located((By.CLASS_NAME , 'btn_area'))
-  )
-  removeElement()
-  faceNorth()
-  moveLeftCamera()
-  moveLeftCamera()
-  log.append('14369454.2751015,4195763.4417014,16,0,0,0,dha')
-  log.append('14369445.9148015,4195933.0363579,16,0,0,0,dha')
-  log.append('14368732.9006470,4195452.9162740,16,0,0,0,dha')
-  log.append('14369437.5545015,4195172.2490607,16,0,0,0,dha')
-
-def saveScreenShot(version):
-  save_url = DIR + version +".png"
-  driver.save_screenshot(save_url)
-
-def wait_for_correct_current_url(prev_url, start, end):
-  while True:
-    if driver.current_url[start:end] != prev_url:
-      break
-  # WebDriverWait(driver, delay).until(lambda driver: driver.current_url == prev_url)
-
 def goFront():
   # 모니터 전체 사이즈
   # 제 컴퓨터에 최적화되어있습니다!!
@@ -107,7 +91,7 @@ def goFront():
   pyautogui.moveTo(width / 2, height * 0.81)
   sleep(0.02)
   pyautogui.click()
-  sleep(1)
+  sleep(0.7)
 
 def goBack():
   for _ in range(4):
@@ -118,6 +102,35 @@ def lookBack():
   for _ in range(4):
     moveLeftCamera()
     sleep(0.1)
+
+def initCrawler():
+  WebDriverWait(driver, delay).until(
+    EC.presence_of_element_located((By.CLASS_NAME , 'btn_area'))
+  )
+  WebDriverWait(driver, delay).until(
+    EC.presence_of_element_located((By.CLASS_NAME , 'panorama_location_area'))
+  )
+  sleep(1)
+  removeElement()
+  faceNorth()
+  moveLeftCamera()
+  moveLeftCamera()
+  goFront()
+  log.append('14369454.2751015,4195763.4417014,16,0,0,0,dha')
+  log.append('14369445.9148015,4195933.0363579,16,0,0,0,dha')
+  log.append('14368732.9006470,4195452.9162740,16,0,0,0,dha')
+  log.append('14369437.5545015,4195172.2490607,16,0,0,0,dha')
+
+def saveScreenShot(version):
+  save_url = DIR + version +".png"
+  driver.save_screenshot(save_url)
+  
+
+def wait_for_correct_current_url(prev_url, start, end):
+  while True:
+    if driver.current_url[start:end] != prev_url:
+      break
+  # WebDriverWait(driver, delay).until(lambda driver: driver.current_url == prev_url)
 
 def action():
   # print(log)
@@ -137,11 +150,11 @@ def action():
   wait_for_correct_current_url(curr_url, start, end)
   for i in range(3):
     for j in range(8):
-      version = index + '_' + str(i) + '_' + str(j) + '_' + location
-      saveScreenShot(version)
+      version = str(index) + '_' + str(i) + '_' + str(j) + '_' + location
       prev_Url = action()
       goBack()
       wait_for_correct_current_url(prev_Url, start, end)
+      saveScreenShot(version)
       # lookBack()
       moveLeftCamera()
     moveUpCamera()
