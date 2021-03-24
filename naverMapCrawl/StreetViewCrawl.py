@@ -19,6 +19,8 @@ import pyautogui
 
 startURL = 'https://map.naver.com/v5/?c=14369591.6228867,4195399.1714885,16,0,0,0,dha&p=W24Pz_oAOSKO7Jjias5jaA,-74.82,-5.43,80,Float'
 
+index = 0
+
 delay = 30 # seconds
 
 log = []
@@ -67,7 +69,8 @@ def initCrawler():
   faceNorth()
 
 def saveScreenShot(version):
-  driver.save_screenshot(DIR + "screenshot"+ version +".png")
+  save_url = DIR + version +".png"
+  driver.save_screenshot(save_url)
 
 def moveUpCamera():
   script = """
@@ -112,25 +115,28 @@ def lookBack():
 
 def action():
   # print(log)
-  location =  driver.current_url
-  start = location.find('c=')
-  end = location.find('&')
-  if location[start + 2 : end] in log:
-    return location[start + 2 : end]
+  curr_url =  driver.current_url
+  start = curr_url.find('c=')
+  end = curr_url.find('&')
+  location = curr_url[start + 2 : end]
+  if location in log:
+    return location
   else:
-    log.append(location[start + 2 : end])
-    log_file.writelines(location[start + 2 : end] + "\n")
+    global index
+    index += 1
+    log.append(location)
+    log_file.writelines(location + "\n")
 
   goFront()
-  wait_for_correct_current_url(location, start, end)
+  wait_for_correct_current_url(curr_url, start, end)
   for i in range(3):
     for j in range(8):
-      version = location[start + 2 : end] + str(i) + '_' + str(j)
+      version = index + '_' + str(i) + '_' + str(j) + '_' + location
       saveScreenShot(version)
-      prev_location = action()
+      prev_Url = action()
       goBack()
-      wait_for_correct_current_url(prev_location, start, end)
-      lookBack()
+      wait_for_correct_current_url(prev_Url, start, end)
+      # lookBack()
       moveLeftCamera()
     moveUpCamera()
 
