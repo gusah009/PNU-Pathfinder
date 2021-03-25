@@ -26,7 +26,7 @@ index = 0
 
 delay = 30 # seconds
 
-log = []
+log = {}
 
 DIR = './IMG/'
 
@@ -94,7 +94,7 @@ def goFront():
   pyautogui.moveTo(width / 2, height * 0.94)
   sleep(0.02)
   pyautogui.click()
-  pyautogui.moveTo(1, 1)
+  pyautogui.moveTo(10, 10)
   sleep(0.7)
 
 def goBack():
@@ -121,10 +121,10 @@ def initCrawler():
   moveLeftCamera()
   moveLeftCamera()
   goFront()
-  log.append('14369454.2751015,4195763.4417014,16,0,0,0,dha')
-  log.append('14369445.9148015,4195933.0363579,16,0,0,0,dha')
-  log.append('14368732.9006470,4195452.9162740,16,0,0,0,dha')
-  log.append('14369437.5545015,4195172.2490607,16,0,0,0,dha')
+  log['14369454.2751015,4195763.4417014,15,0,0,0,dha'] = True
+  log['14369445.9148015,4195933.0363579,15,0,0,0,dha'] = True
+  log['14368732.9006470,4195452.9162740,15,0,0,0,dha'] = True
+  log['14369437.5545015,4195172.2490607,15,0,0,0,dha'] = True
 
 def saveScreenShot(version):
   save_url = DIR + version +".png"
@@ -137,14 +137,12 @@ def wait_for_correct_current_url(prev_loc, start, end):
     curr_loc = driver.current_url[start:end]
     if curr_loc != prev_loc:
       break
-    if time() - start_time > 5:
+    if time() - start_time > 3:
       moveLeftCamera()
       goFront()
       break
-  # WebDriverWait(driver, delay).until(lambda driver: driver.current_url == prev_url)
 
 def action():
-  # print(log)
   curr_url =  driver.current_url
   start = curr_url.find('c=')
   end = curr_url.find('&')
@@ -154,21 +152,20 @@ def action():
   else:
     global index
     index += 1
-    log.append(location)
+    log[location] = True
     log_file.writelines(location + "\n")
 
-  for i in range(3):
-    for j in range(8):
-      version = str(index) + '_' + str(i) + '_' + str(j) + '_' + location
-      goFront()
-      wait_for_correct_current_url(location, start + 2, end)
-      prev_loc = action()
-      goBack()
-      wait_for_correct_current_url(prev_loc, start + 2, end)
-      saveScreenShot(version)
-      # lookBack()
-      moveLeftCamera()
-    moveUpCamera()
+  print(log)
+  for i in range(8):
+    version = str(index) + '_' + str(i) + '_' + location
+    goFront()
+    wait_for_correct_current_url(location, start + 2, end)
+    prev_loc = action()
+    goBack()
+    wait_for_correct_current_url(prev_loc, start + 2, end)
+    saveScreenShot(version)
+    # lookBack()
+    moveLeftCamera()
 
 def main():
   initCrawler()
