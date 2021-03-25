@@ -12,6 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from time import sleep
+from time import time
+
+
 
 import platform
 
@@ -88,14 +91,16 @@ def goFront():
   # 모니터 전체 사이즈
   # 제 컴퓨터에 최적화되어있습니다!!
   width, height = pyautogui.size()
-  pyautogui.moveTo(width / 2, height * 0.81)
+  pyautogui.moveTo(width / 2, height * 0.94)
   sleep(0.02)
   pyautogui.click()
+  pyautogui.moveTo(1, 1)
   sleep(0.7)
 
 def goBack():
   for _ in range(4):
     moveLeftCamera()
+  print('-------')
   goFront()
 
 def lookBack():
@@ -126,9 +131,15 @@ def saveScreenShot(version):
   driver.save_screenshot(save_url)
   
 
-def wait_for_correct_current_url(prev_url, start, end):
+def wait_for_correct_current_url(prev_loc, start, end):
+  start_time = time()
   while True:
-    if driver.current_url[start:end] != prev_url:
+    curr_loc = driver.current_url[start:end]
+    if curr_loc != prev_loc:
+      break
+    if time() - start_time > 5:
+      moveLeftCamera()
+      goFront()
       break
   # WebDriverWait(driver, delay).until(lambda driver: driver.current_url == prev_url)
 
@@ -146,31 +157,23 @@ def action():
     log.append(location)
     log_file.writelines(location + "\n")
 
-  goFront()
-  wait_for_correct_current_url(curr_url, start, end)
   for i in range(3):
     for j in range(8):
       version = str(index) + '_' + str(i) + '_' + str(j) + '_' + location
-      prev_Url = action()
+      goFront()
+      wait_for_correct_current_url(location, start + 2, end)
+      prev_loc = action()
       goBack()
-      wait_for_correct_current_url(prev_Url, start, end)
+      wait_for_correct_current_url(prev_loc, start + 2, end)
       saveScreenShot(version)
       # lookBack()
       moveLeftCamera()
     moveUpCamera()
 
-# log = open('url_log_data.txt', 'w')
-# log.writelines(driver.current_url)
 def main():
-
-
   initCrawler()
 
   try:
-    # a = driver.current_url
-    # start = a.find('&p=')
-    # end = a.find('Float')
-    # print(a[start + 26: end - 1])
     action()
   except TimeoutException:
     print("Loading took too much time!")
