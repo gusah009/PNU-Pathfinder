@@ -20,7 +20,7 @@ import platform
 
 import pyautogui
 
-startURL = 'https://map.naver.com/v5/?c=14369619.0924437,4195394.3941742,15,0,0,0,dha&p=QT1tMDk_XIdEotJVEo6ClQ,-90,0,80,Float'
+startURL = 'https://map.naver.com/v5/?c=14369598.7888581,4195396.7828313,16,0,0,0,dh&p=ghej0C2vIxkKwQOU_y1E3Q,-84.68,-8.03,80,Float'
 
 index = 0
 
@@ -100,7 +100,6 @@ def goFront():
 def goBack():
   for _ in range(4):
     moveLeftCamera()
-  print('-------')
   goFront()
 
 def lookBack():
@@ -115,63 +114,87 @@ def initCrawler():
   WebDriverWait(driver, delay).until(
     EC.presence_of_element_located((By.CLASS_NAME , 'panorama_location_area'))
   )
-  sleep(1)
+  sleep(0.1)
   removeElement()
   faceNorth()
   moveLeftCamera()
   moveLeftCamera()
   goFront()
-  log['14369454.2751015,4195763.4417014,15,0,0,0,dha'] = True
-  log['14369445.9148015,4195933.0363579,15,0,0,0,dha'] = True
-  log['14368732.9006470,4195452.9162740,15,0,0,0,dha'] = True
-  log['14369437.5545015,4195172.2490607,15,0,0,0,dha'] = True
+  # 쪽문
+  log['14369445.9148015,4195757.4700585'] = True
+  log['14369454.2751015,4195764.6360300'] = True
+  # ㅂㅜㄱㅁㅜㄴ
+  log['14369453.0807729,4195936.6193436'] = True
+  
+  log['14368737.6779613,4195478.5943382'] = True
+  log['14369437.5545015,4195172.2490607'] = True
 
 def saveScreenShot(version):
   save_url = DIR + version +".png"
   driver.save_screenshot(save_url)
   
 
-def wait_for_correct_current_url(prev_loc, start, end):
+def wait_for_correct_current_url(prev, start, end):
   start_time = time()
   while True:
-    curr_loc = driver.current_url[start:end]
-    if curr_loc != prev_loc:
-      break
+    curr = driver.current_url[start:end]
+    if curr != prev:
+      return True
     if time() - start_time > 3:
-      moveLeftCamera()
-      goFront()
-      break
+      return False
 
-def action():
+def backCurrUrl(curr_url, angle):
+  start = curr_url.find('&p=') + 25
+  end = curr_url.find('Float')
+  curr_url = curr_url[:start] + angle + curr_url[end:]
+  driver.get(curr_url)
+  WebDriverWait(driver, delay).until(
+    EC.presence_of_element_located((By.CLASS_NAME , 'btn_area'))
+  )
+  WebDriverWait(driver, delay).until(
+    EC.presence_of_element_located((By.CLASS_NAME , 'panorama_location_area'))
+  )
+  sleep(0.1)
+  removeElement()
+  return curr_url
+
+def findAngle():
+  curr_url = driver.current_url
+  start = curr_url.find('&p=') + 25
+  end = curr_url.find('Float')
+  return (curr_url[start:end], start, end)
+
+def action(depth):
   curr_url =  driver.current_url
-  start = curr_url.find('c=')
-  end = curr_url.find('&')
-  location = curr_url[start + 2 : end]
+  loc_start = curr_url.find('c=') + 2
+  loc_end = curr_url.find('&') - 12
+  location = curr_url[loc_start : loc_end]
   if location in log:
     return location
   else:
-    global index
-    index += 1
     log[location] = True
-    log_file.writelines(location + "\n")
+    log_file.writelines(curr_url + "\n")
 
-  print(log)
   for i in range(8):
-    version = str(index) + '_' + str(i) + '_' + location
+    angle, ang_start, ang_end = findAngle()
+    # print(angle, ang_start, ang_end)
+    version = str(depth) + '_' + str(i) + '_' + location
     goFront()
-    wait_for_correct_current_url(location, start + 2, end)
-    prev_loc = action()
-    goBack()
-    wait_for_correct_current_url(prev_loc, start + 2, end)
-    saveScreenShot(version)
+    canMove = wait_for_correct_current_url(location, loc_start, loc_end)
+    if canMove:
+      action(depth + 1)
+      curr_url = backCurrUrl(curr_url, angle)
+      # goBack()
     # lookBack()
+    saveScreenShot(version)
     moveLeftCamera()
+    wait_for_correct_current_url(curr_url, ang_start, ang_end)
 
 def main():
   initCrawler()
 
   try:
-    action()
+    action(0)
   except TimeoutException:
     print("Loading took too much time!")
 
