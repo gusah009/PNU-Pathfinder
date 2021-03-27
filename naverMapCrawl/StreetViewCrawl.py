@@ -20,7 +20,9 @@ import platform
 
 import pyautogui
 
-startURL = 'https://map.naver.com/v5/?c=14369598.7888581,4195396.7828313,16,0,0,0,dh&p=ghej0C2vIxkKwQOU_y1E3Q,-84.68,-8.03,80,Float'
+officialStartURL = 'https://map.naver.com/v5/?c=14369598.7888581,4195396.7828313,16,0,0,0,dh&p=ghej0C2vIxkKwQOU_y1E3Q,-84.68,-8.03,80,Float'
+myStartURL = 'https://map.naver.com/v5/?c=14369506.8255584,4195578.3207735,16,0,0,0,dh&p=NDE-B1jWiK7HXCZxo_yU-w,90,0,80,Float'
+
 
 index = 0
 
@@ -37,7 +39,7 @@ if platform.system() == 'Darwin': # MAC
 elif platform.system() == 'Windows':
   driver = webdriver.Chrome(executable_path='chromedriver')
 driver.maximize_window()
-driver.get(url=startURL)
+driver.get(url=myStartURL)
 
 def removeElement():
   try:
@@ -120,14 +122,24 @@ def initCrawler():
   moveLeftCamera()
   moveLeftCamera()
   goFront()
+  global log
   # 쪽문
   log['14369445.9148015,4195757.4700585'] = True
   log['14369454.2751015,4195764.6360300'] = True
-  # ㅂㅜㄱㅁㅜㄴ
+  # 북문
   log['14369453.0807729,4195936.6193436'] = True
-  
+  # 어느문
+  log['14368732.9006470,4195452.9162740'] = True
   log['14368737.6779613,4195478.5943382'] = True
   log['14369437.5545015,4195172.2490607'] = True
+
+  with open('url_log_data.txt', "r") as logs_url:
+    for log_url in logs_url:
+      loc_start = log_url.find('c=') + 2
+      loc_end = log_url.find('&') - 12
+      log[log_url[loc_start:loc_end]] = True
+
+  print(log)
 
 def saveScreenShot(version):
   save_url = DIR + version +".png"
@@ -177,16 +189,18 @@ def action(depth):
 
   for i in range(8):
     angle, ang_start, ang_end = findAngle()
-    # print(angle, ang_start, ang_end)
     version = str(depth) + '_' + str(i) + '_' + location
+    saveScreenShot(version)
+    moveLeftCamera()
+    wait_for_correct_current_url(curr_url, ang_start, ang_end)
+
+  for i in range(8):
+    angle, ang_start, ang_end = findAngle()
     goFront()
     canMove = wait_for_correct_current_url(location, loc_start, loc_end)
     if canMove:
       action(depth + 1)
       curr_url = backCurrUrl(curr_url, angle)
-      # goBack()
-    # lookBack()
-    saveScreenShot(version)
     moveLeftCamera()
     wait_for_correct_current_url(curr_url, ang_start, ang_end)
 
