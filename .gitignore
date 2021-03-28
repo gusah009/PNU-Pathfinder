@@ -108,4 +108,5 @@ lint/tmp/
 chromedriver.exe
 *.png
 test.py
+config.json
 ############## Selenium Crwal gitignore End ###############

@@ -21,7 +21,7 @@ import platform
 import pyautogui
 
 officialStartURL = 'https://map.naver.com/v5/?c=14369598.7888581,4195396.7828313,16,0,0,0,dh&p=ghej0C2vIxkKwQOU_y1E3Q,-84.68,-8.03,80,Float'
-myStartURL = 'https://map.naver.com/v5/?c=14369506.8255584,4195578.3207735,16,0,0,0,dh&p=NDE-B1jWiK7HXCZxo_yU-w,90,0,80,Float'
+myStartURL = 'https://map.naver.com/v5/?c=14369506.8255584,4195578.3207735,16,0,0,0,dh&p=NDE-B1jWiK7HXCZxo_yU-w,0,0,80,Float'
 
 
 index = 0
@@ -208,7 +208,7 @@ def main():
   initCrawler()
 
   try:
-    action(0)
+    action(1000)
   except TimeoutException:
     print("Loading took too much time!")
 
