@@ -139,7 +139,7 @@ def initCrawler():
       loc_end = log_url.find('&') - 12
       log[log_url[loc_start:loc_end]] = True
 
-  print(log)
+  # print(log)
 
 def saveScreenShot(version):
   save_url = DIR + version +".png"

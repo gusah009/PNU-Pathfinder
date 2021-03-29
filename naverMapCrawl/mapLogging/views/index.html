@@ -8,15 +8,50 @@
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=jt10o22w6n"></script>
 </head>
 <body>
-<div id="map" style="width:100%;height:400px;"></div>
+<div id="map" style="width:100%;height:1000px;"></div>
 
 <script>
-var mapOptions = {
-    center: new naver.maps.LatLng(37.3595704, 127.105399),
-    zoom: 10
-};
+    var mapOptions = {
+        center: new naver.maps.LatLng(35.23158977, 129.0841948),
+        zoom: 16
+    };
+    var map = new naver.maps.Map('map', mapOptions);
 
-var map = new naver.maps.Map('map', mapOptions);
+    var streetLayer = new naver.maps.StreetLayer();
+    naver.maps.Event.once(map, 'init_stylemap', function() {
+        streetLayer.setMap(map);
+    });
+
+    var latlngs = {}
+    function readTextFile(file)
+    {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function ()
+        {
+            if(rawFile.readyState === rawFile.DONE)
+            {
+                if(rawFile.status === 200 || rawFile.status == 0)
+                {
+                    var allText = rawFile.responseText;
+                    latlngs = JSON.parse(allText);
+                }
+            }
+        }
+        rawFile.send(null);
+    }
+    
+    readTextFile("../loc_log_data.json");
+
+    var markerList = [];
+    for (latlng of latlngs) {
+        var marker = new naver.maps.Marker({
+            position: latlng,
+            map: map
+        });
+        markerList.push(marker);
+    }
+
 </script>
 </body>
 </html>
