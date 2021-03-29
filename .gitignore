@@ -104,3 +104,9 @@ lint/tmp/
 # Android Profiling
 *.hprof
 ############## Android gitignore End ###############
+############## Selenium Crwal gitignore Start ###############
+chromedriver.exe
+*.png
+test.py
+config.json
+############## Selenium Crwal gitignore End ###############
