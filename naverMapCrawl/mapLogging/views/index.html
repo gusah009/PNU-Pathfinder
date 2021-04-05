@@ -43,14 +43,19 @@
     
     readTextFile("../loc_log_data.json");
 
+    var globalIndex = 0;
+
     var markerList = [];
-    for (latlng of latlngs) {
+    var pointing = setInterval(() => {
+        if (globalIndex == Object.keys(latlngs).length) {
+            clearInterval(pointing);
+        }
         var marker = new naver.maps.Marker({
-            position: latlng,
+            position: latlngs[globalIndex++],
             map: map
         });
         markerList.push(marker);
-    }
+    }, 33)
 
 </script>
 </body>
