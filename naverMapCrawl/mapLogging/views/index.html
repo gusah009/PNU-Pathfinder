@@ -57,6 +57,36 @@
         markerList.push(marker);
     }, 33)
 
+    function initGeocoder() {
+        if (!map.isStyleMapReady) {
+            return;
+        }
+
+        var latlng = map.getCenter();
+
+        infoWindow = new naver.maps.InfoWindow({
+            content: ''
+        });
+
+        map.addListener('click', function(e) {
+            var latlng = e.coord;
+
+            infoWindow.setContent([
+                '<div style="padding:10px;width:380px;font-size:14px;line-height:20px;">',
+                '<strong>LatLng</strong> : '+ '좌 클릭 지점 위/경도 좌표' +'<br />',
+                '<strong>UTMK</strong> : '+ '위/경도 좌표를 UTMK 좌표로 변환한 값' +'<br />',
+                '<strong>TM128</strong> : '+ '변환된 UTMK 좌표를 TM128 좌표로 변환한 값' +'<br />',
+                '<strong>NAVER</strong> : '+ '변환된 TM128 좌표를 NAVER 좌표로 변환한 값' +'<br />',
+                '</div>'
+            ].join(''));
+
+            infoWindow.open(map, latlng);
+            console.log('LatLng: ' + latlng.toString());
+        });
+    }
+
+    naver.maps.onJSContentLoaded = initGeocoder;
+    naver.maps.Event.once(map, 'init_stylemap', initGeocoder);
 </script>
 </body>
 </html>
