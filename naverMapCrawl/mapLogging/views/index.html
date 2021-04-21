@@ -87,6 +87,16 @@
 
     naver.maps.onJSContentLoaded = initGeocoder;
     naver.maps.Event.once(map, 'init_stylemap', initGeocoder);
+
+    var rectangle = new naver.maps.Rectangle({
+        map: map,
+        bounds: new naver.maps.LatLngBounds(
+            new naver.maps.LatLng(35.2299247, 129.0812014),
+            new naver.maps.LatLng(35.2318527, 129.0840231)
+        ),
+        fillColor: 'crimson',
+        fillOpacity: 0.6
+    });
 </script>
 </body>
 </html>

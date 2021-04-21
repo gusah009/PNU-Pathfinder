@@ -109,4 +109,5 @@ chromedriver.exe
 *.png
 test.py
 config.json
+.zip
 ############## Selenium Crwal gitignore End ###############
