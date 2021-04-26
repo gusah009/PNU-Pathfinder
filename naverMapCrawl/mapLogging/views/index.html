@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>간단한 지도 표시하기</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=jt10o22w6n"></script>
+</head>
+<body>
+<div id="map" style="width:100%;height:1000px;"></div>
+
+<script>
+    var mapOptions = {
+        center: new naver.maps.LatLng(35.23158977, 129.0841948),
+        zoom: 16
+    };
+    var map = new naver.maps.Map('map', mapOptions);
+
+    var streetLayer = new naver.maps.StreetLayer();
+    naver.maps.Event.once(map, 'init_stylemap', function() {
+        streetLayer.setMap(map);
+    });
+
+    var latlngs = {}
+    function readTextFile(file)
+    {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function ()
+        {
+            if(rawFile.readyState === rawFile.DONE)
+            {
+                if(rawFile.status === 200 || rawFile.status == 0)
+                {
+                    var allText = rawFile.responseText;
+                    latlngs = JSON.parse(allText);
+                }
+            }
+        }
+        rawFile.send(null);
+    }
+    
+    readTextFile("../loc_log_data.json");
+
+    var globalIndex = 0;
+
+    var markerList = [];
+    var pointing = setInterval(() => {
+        if (globalIndex == Object.keys(latlngs).length) {
+            clearInterval(pointing);
+        }
+        var marker = new naver.maps.Marker({
+            position: latlngs[globalIndex++],
+            map: map
+        });
+        markerList.push(marker);
+    }, 33)
+
+    function initGeocoder() {
+        if (!map.isStyleMapReady) {
+            return;
+        }
+
+        var latlng = map.getCenter();
+
+        infoWindow = new naver.maps.InfoWindow({
+            content: ''
+        });
+
+        map.addListener('click', function(e) {
+            var latlng = e.coord;
+
+            infoWindow.setContent([
+                '<div style="padding:10px;width:380px;font-size:14px;line-height:20px;">',
+                '<strong>LatLng</strong> : '+ '좌 클릭 지점 위/경도 좌표' +'<br />',
+                '<strong>UTMK</strong> : '+ '위/경도 좌표를 UTMK 좌표로 변환한 값' +'<br />',
+                '<strong>TM128</strong> : '+ '변환된 UTMK 좌표를 TM128 좌표로 변환한 값' +'<br />',
+                '<strong>NAVER</strong> : '+ '변환된 TM128 좌표를 NAVER 좌표로 변환한 값' +'<br />',
+                '</div>'
+            ].join(''));
+
+            infoWindow.open(map, latlng);
+            console.log('LatLng: ' + latlng.toString());
+        });
+    }
+
+    naver.maps.onJSContentLoaded = initGeocoder;
+    naver.maps.Event.once(map, 'init_stylemap', initGeocoder);
+</script>
+</body>
+</html>
