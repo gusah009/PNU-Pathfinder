@@ -111,3 +111,4 @@ test.py
 config.json
 .zip
 ############## Selenium Crwal gitignore End ###############
+*.zip
