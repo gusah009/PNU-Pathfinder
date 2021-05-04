@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow.lite.examples.detection.customview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -34,8 +35,10 @@ public class OverlayView extends View {
     callbacks.add(callback);
   }
 
+  @SuppressLint("MissingSuperCall")
   @Override
   public synchronized void draw(final Canvas canvas) {
+    super.draw(canvas);
     for (final DrawCallback callback : callbacks) {
       callback.drawCallback(canvas);
     }

@@ -40,22 +40,24 @@ public class MultiBoxTracker {
   private static final float TEXT_SIZE_DIP = 18;
   private static final float MIN_SIZE = 16.0f;
   private static final int[] COLORS = {
-    Color.BLUE,
-    Color.RED,
-    Color.GREEN,
-    Color.YELLOW,
-    Color.CYAN,
-    Color.MAGENTA,
-    Color.WHITE,
-    Color.parseColor("#55FF55"),
-    Color.parseColor("#FFA500"),
-    Color.parseColor("#FF8888"),
-    Color.parseColor("#AAAAFF"),
-    Color.parseColor("#FFFFAA"),
-    Color.parseColor("#55AAAA"),
-    Color.parseColor("#AA33AA"),
-    Color.parseColor("#0D0068")
+          Color.parseColor("#8FC0FF")
+//    Color.BLUE,
+//    Color.RED,
+//    Color.GREEN,
+//    Color.YELLOW,
+//    Color.CYAN,
+//    Color.MAGENTA,
+//    Color.WHITE,
+//    Color.parseColor("#55FF55"),
+//    Color.parseColor("#FFA500"),
+//    Color.parseColor("#FF8888"),
+//    Color.parseColor("#AAAAFF"),
+//    Color.parseColor("#FFFFAA"),
+//    Color.parseColor("#55AAAA"),
+//    Color.parseColor("#AA33AA"),
+//    Color.parseColor("#0D0068")
   };
+
   final List<Pair<Float, RectF>> screenRects = new LinkedList<Pair<Float, RectF>>();
   private final Logger logger = new Logger();
   private final Queue<Integer> availableColors = new LinkedList<Integer>();
@@ -145,12 +147,12 @@ public class MultiBoxTracker {
 
       final String labelString =
           !TextUtils.isEmpty(recognition.title)
-              ? String.format("%s %.2f", recognition.title, (100 * recognition.detectionConfidence))
-              : String.format("%.2f", (100 * recognition.detectionConfidence));
+              ? String.format("%s", recognition.title)
+              : String.format("");
       //            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.top,
       // labelString);
       borderedText.drawText(
-          canvas, trackedPos.left + cornerSize, trackedPos.top, labelString + "%", boxPaint);
+          canvas, trackedPos.left + cornerSize, trackedPos.top, labelString , boxPaint);
     }
   }
 
@@ -188,7 +190,14 @@ public class MultiBoxTracker {
       return;
     }
 
-    for (final Pair<Float, Recognition> potential : rectsToTrack) {
+    Pair<Float, Recognition> potential = rectsToTrack.get(0);
+    for (final Pair<Float, Recognition> arr : rectsToTrack) {
+      if(arr.first < potential.first){
+        potential = arr;
+      }
+    }
+
+//    for (final Pair<Float, Recognition> potential : rectsToTrack) {
       final TrackedRecognition trackedRecognition = new TrackedRecognition();
       trackedRecognition.detectionConfidence = potential.first;
       trackedRecognition.location = new RectF(potential.second.getLocation());
@@ -196,10 +205,11 @@ public class MultiBoxTracker {
       trackedRecognition.color = COLORS[trackedObjects.size()];
       trackedObjects.add(trackedRecognition);
 
-      if (trackedObjects.size() >= COLORS.length) {
-        break;
-      }
-    }
+
+//      if (trackedObjects.size() >= COLORS.length) {
+//        break;
+//      }
+//    }
   }
 
   private static class TrackedRecognition {
