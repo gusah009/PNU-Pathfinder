@@ -23,7 +23,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black"
+        android:background="@color/main_color"
         android:orientation="vertical">
 
 
@@ -31,9 +31,7 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="170dp"
             tools:context="org.tensorflow.demo.CameraActivity" >
-
         </FrameLayout>
 
     </RelativeLayout>
@@ -43,16 +41,22 @@
         android:background="@color/main_color"
         android:layout_gravity="bottom"
         android:gravity="center_vertical"
+        android:layout_marginBottom="70dp"
         >
         <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:src="@drawable/freshman"/>
         <TextView
-            android:id="@+id/building"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="여긴 무슨 건물이지?"
+            />
+        <TextView
+            android:id="@+id/building"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
             />
 
     </LinearLayout>

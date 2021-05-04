@@ -82,9 +82,12 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected TextView frameValueTextView, cropValueTextView, inferenceTimeTextView;
   protected ImageView bottomSheetArrowImageView;
+  protected TextView buildingView;
   private ImageView plusImageView, minusImageView;
   private SwitchCompat apiSwitchCompat;
   private TextView threadsTextView;
+
+
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -111,6 +114,7 @@ public abstract class CameraActivity extends AppCompatActivity
     gestureLayout = findViewById(R.id.gesture_layout);
     sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
     bottomSheetArrowImageView = findViewById(R.id.bottom_sheet_arrow);
+    buildingView = findViewById(R.id.building);
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
@@ -526,6 +530,10 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void showFrameInfo(String frameInfo) {
     frameValueTextView.setText(frameInfo);
+  }
+
+  protected void showBuildingInfo(String buildingInfo){
+    buildingView.setText(buildingInfo);
   }
 
   protected void showCropInfo(String cropInfo) {
