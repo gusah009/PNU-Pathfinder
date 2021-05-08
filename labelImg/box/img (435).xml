@@ -1,0 +1,26 @@
+<annotation>
+	<folder>sampleIMG_2</folder>
+	<filename>img (435).png</filename>
+	<path>/mnt/c/shasuri/assignment/3g_1s/sw_arch_exp/sample_images/sampleIMG_2/img (435).png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1920</width>
+		<height>925</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>zedo</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>994</xmin>
+			<ymin>34</ymin>
+			<xmax>1913</xmax>
+			<ymax>538</ymax>
+		</bndbox>
+	</object>
+</annotation>

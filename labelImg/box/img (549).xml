@@ -1,0 +1,38 @@
+<annotation>
+	<folder>sampleIMG_2</folder>
+	<filename>img (549).png</filename>
+	<path>/mnt/c/shasuri/assignment/3g_1s/sw_arch_exp/sample_images/sampleIMG_2/img (549).png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1920</width>
+		<height>925</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>unjuk</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1451</xmin>
+			<ymin>279</ymin>
+			<xmax>1920</xmax>
+			<ymax>479</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>zedo</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1223</xmin>
+			<ymin>248</ymin>
+			<xmax>1818</xmax>
+			<ymax>455</ymax>
+		</bndbox>
+	</object>
+</annotation>
