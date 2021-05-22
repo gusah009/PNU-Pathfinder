@@ -6,4 +6,5 @@
     <color name="tfe_semi_transparent">#66000000</color>
     <color name="main_color">#8FC0FF</color>
     <color name="primary_color">#F0CC00</color>
+    <color name="point_color">#FFED87</color>
 </resources>
