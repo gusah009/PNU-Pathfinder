@@ -49,6 +49,14 @@
             android:hint="비밀번호를 입력해 주세요."
             android:layout_margin="10dp"
             />
+        <TextView
+            android:id="@+id/login_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" "
+            android:layout_marginLeft="10dp"
+            android:textColor="@android:color/holo_red_light"
+            />
         <Button
             android:id="@+id/login_btn"
             android:layout_width="match_parent"

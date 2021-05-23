@@ -5,10 +5,13 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Process;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 import androidx.appcompat.app.AlertDialog;
@@ -19,6 +22,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,7 +30,9 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText login_id, login_pw;
-    Button login;
+    private Button login;
+    private Handler myHandler;
+    private TextView login_check;
 
 
 
@@ -38,10 +44,25 @@ public class LoginActivity extends AppCompatActivity {
 
         if(isConnected() == false) isNotConnected_showAlert();
 
+
         login = findViewById(R.id.login_btn);
+        login_check = (TextView)findViewById(R.id.login_check);
+
+        myHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg){
+                if(msg.what == 1000) {
+                    login_check.setText("아이디 및 비밀번호를 확인해주세요.");
+                }else{
+                    login_check.setText(" ");
+                }
+            }
+        };
+
         login.setOnClickListener((view -> {
-            login_id = findViewById(R.id.login_id);
-            login_pw = findViewById(R.id.login_password);
+
+            login_id = (EditText)findViewById(R.id.login_id);
+            login_pw = (EditText)findViewById(R.id.login_password);
             final Bundle bundle = new Bundle();
 
             new Thread(){
@@ -106,94 +127,50 @@ public class LoginActivity extends AppCompatActivity {
                                 .timeout(10000)
                                 .cookie("etsid",cookie)
                                 .method(Connection.Method.POST)
+                                .ignoreHttpErrors(true)
                                 .execute();
 
+                        int statusCode = response2.statusCode();
+                        if(statusCode < 400){
+                            String id_for_std = response2.parse().selectFirst("table").id();
+                            System.out.println(id_for_std);
+                            Connection.Response response3 = Jsoup.connect("https://api.everytime.kr/find/timetable/table")
+                                    .header("Accept", "*/*")
+                                    .header("Accept-Encoding", "gzip, deflate, br")
+                                    .header("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")
+                                    .header("Connection", "keep-alive")
+                                    .header("Content-Length", "11")
+                                    .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                                    .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36")
+                                    .header("Origin", "https://everytime.kr")
+                                    .header("Referer", "https://everytime.kr/")
+                                    .header("Host", "api.everytime.kr")
+                                    .header("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"")
+                                    .header("sec-ch-ua-mobile", "?0")
+                                    .header("Sec-Fetch-Dest", "empty")
+                                    .header("Sec-Fetch-Mode", "cors")
+                                    .header("Sec-Fetch-Site", "same-site")
+                                    .data("id",id_for_std)
+                                    .timeout(10000)
+                                    .cookie("etsid",cookie)
+                                    .method(Connection.Method.POST)
+                                    .execute();
+                            System.out.println(response3.parse().select("table"));
+                            myHandler.sendEmptyMessage(0);
+                        }else{
+                            myHandler.sendEmptyMessage(1000);
+                            System.out.println(statusCode);
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
 //                        System.out.println(response2.parse());
 
-                        String id_for_std = response2.parse().selectFirst("table").id();
-                        System.out.println(id_for_std);
-
-                        Connection.Response response3 = Jsoup.connect("https://api.everytime.kr/find/timetable/table")
-                                .header("Accept", "*/*")
-                                .header("Accept-Encoding", "gzip, deflate, br")
-                                .header("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")
-                                .header("Connection", "keep-alive")
-                                .header("Content-Length", "11")
-                                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                                .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36")
-                                .header("Origin", "https://everytime.kr")
-                                .header("Referer", "https://everytime.kr/")
-                                .header("Host", "api.everytime.kr")
-                                .header("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"")
-                                .header("sec-ch-ua-mobile", "?0")
-                                .header("Sec-Fetch-Dest", "empty")
-                                .header("Sec-Fetch-Mode", "cors")
-                                .header("Sec-Fetch-Site", "same-site")
-                                .data("id",id_for_std)
-                                .timeout(10000)
-                                .cookie("etsid",cookie)
-                                .method(Connection.Method.POST)
-                                .execute();
-
-                        System.out.println(response3.parse().select("table"));
 
 
-//                        Map<String, String> data2 = new HashMap<>();
-//                        data2.put("id", "******");
-//                        data2.put("limit_num", "20");
-//                        data2.put("start_num", "0");
-//                        data2.put("moiminfo", "true");
-//
-//                        Connection.Response response2 = Jsoup.connect("https://api.everytime.kr/find/board/article/list")
-//                                .userAgent("Mozilla/5.0")
-//                                .timeout(3000)
-//                                .header("Origin", "https://everytime.kr")
-//                                .header("Referer", "https://everytime.kr/")
-//                                .header("Accept", "*/*")
-//                                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-//                                .header("Accept-Encoding", "gzip, deflate, br")
-//                                .header("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")
-//                                .header("Connection", "keep-alive")
-//                                .header("Content-Length", "48")
-//                                .header("Host", "api.everytime.kr")
-//                                .header("sec-ch-ua", "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"")
-//                                .header("sec-ch-ua-mobile", "?0")
-//                                .header("Sec-Fetch-Dest", "empty")
-//                                .header("Sec-Fetch-Mode", "cors")
-//                                .header("Sec-Fetch-Site", "same-site")
-//                                .data(data2)
-//                                .cookies(loginCookie)
-//                                .method(Connection.Method.POST)
-//                                .execute();
-//
-//                        System.out.println(respon);
-//                        Elements infos = response2.select("");
-//                        System.out.println(infos);
-//                        System.out.println( login_id.toString());
-//                        System.out.println( login_pw.toString());
-//                        Map<String, String> data = new HashMap<>();
-//                        data.put("id", login_id.toString());
-//                        data.put("pw", login_pw.toString());
-//
-//                        Connection.Response res = Jsoup.connect("https://sso.pusan.ac.kr/LoginServlet?method=idpwProcessEx&ssid=49")
-//                                .data(data)
-//                                .method(Connection.Method.POST)
-//                                .execute();
-//
-//                        Document doc = res.parse();
-//                        Map<String, String> cookies = res.cookies();
-//
-//                        Document doc2 = Jsoup.connect("https://e-onestop.pusan.ac.kr/index?home=home")
-//                                .cookies(cookies)
-//                                .get();
-//                        System.out.println(doc2.html());
-//                        System.out.println(cookies);
-//
-////                        Document doc2 = Jsoup.connect("https://e-onestop.pusan.ac.kr/middleware/study/privateTimeTable/getPrivateRegistrationYear")
-////                                .cookie(cookies)
-////                                .get();
-////                        System.out.println(cookies);
                     }
                     catch (IOException e){
                         e.printStackTrace();
@@ -204,6 +181,8 @@ public class LoginActivity extends AppCompatActivity {
         }));
 
     }
+    // UI는 메인 스레드에서만 건드릴 수 있으므로 핸들러를 만들어줌.
+
     private void isNotConnected_showAlert(){
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setTitle("네트워크 연결 오류");
@@ -233,6 +212,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         return connected;
     }
+
 }
 
 
