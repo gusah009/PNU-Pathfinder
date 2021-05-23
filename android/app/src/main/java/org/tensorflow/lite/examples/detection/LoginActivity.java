@@ -12,16 +12,21 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.tensorflow.lite.examples.detection.Room.AppDatabase;
+import org.tensorflow.lite.examples.detection.Room.TimeTable;
+import org.tensorflow.lite.examples.detection.Room.User;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -33,8 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button login;
     private Handler myHandler;
     private TextView login_check;
-
-
+    static boolean isLoggedIn;
+    AppDatabase db;
 
 
     @Override
@@ -47,6 +52,12 @@ public class LoginActivity extends AppCompatActivity {
 
         login = findViewById(R.id.login_btn);
         login_check = (TextView)findViewById(R.id.login_check);
+        isLoggedIn = false;
+
+
+        db = AppDatabase.getDatabase(LoginActivity.this);
+
+
 
         myHandler = new Handler(){
             @Override
@@ -64,7 +75,6 @@ public class LoginActivity extends AppCompatActivity {
             login_id = (EditText)findViewById(R.id.login_id);
             login_pw = (EditText)findViewById(R.id.login_password);
             final Bundle bundle = new Bundle();
-
             new Thread(){
                 @Override
                 public void run(){
@@ -132,6 +142,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         int statusCode = response2.statusCode();
                         if(statusCode < 400){
+                            isLoggedIn = true;
+
+
+
                             String id_for_std = response2.parse().selectFirst("table").id();
                             System.out.println(id_for_std);
                             Connection.Response response3 = Jsoup.connect("https://api.everytime.kr/find/timetable/table")
@@ -156,6 +170,13 @@ public class LoginActivity extends AppCompatActivity {
                                     .method(Connection.Method.POST)
                                     .execute();
                             System.out.println(response3.parse().select("table"));
+
+
+                            Elements subjects = response3.parse().select("subject");
+
+
+
+
                             myHandler.sendEmptyMessage(0);
                         }else{
                             myHandler.sendEmptyMessage(1000);
@@ -181,6 +202,24 @@ public class LoginActivity extends AppCompatActivity {
         }));
 
     }
+
+    private void dataStore(String loginId,String loginPw, Elements subjects){
+        User user = new User(loginId, loginPw);
+        db.userDAO().insert(user);
+
+        for(Element subject : subjects){
+            String name = subject.select("name").attr("value");
+            String place = subject.select("data").attr("place").trim();
+            String time = subject.select("name").val();
+            String name = subject.select("name").val();
+            
+            TimeTable timeTable = new TimeTable();
+            db.timeTableDAO(timeTable)
+        }
+
+    }
+
+
     // UI는 메인 스레드에서만 건드릴 수 있으므로 핸들러를 만들어줌.
 
     private void isNotConnected_showAlert(){
@@ -199,6 +238,14 @@ public class LoginActivity extends AppCompatActivity {
         alert.show();
 
 
+    }
+    void showToast(final CharSequence text) {
+        myHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LoginActivity.this, text, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private boolean isConnected(){
         boolean connected = false;
