@@ -2,6 +2,7 @@ package org.tensorflow.lite.examples.detection;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,17 +18,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.tensorflow.lite.examples.detection.Room.AppDatabase;
-import org.tensorflow.lite.examples.detection.Room.TimeTable;
-import org.tensorflow.lite.examples.detection.Room.User;
-import org.w3c.dom.Text;
+import org.tensorflow.lite.examples.detection.database.AppDatabase;
+import org.tensorflow.lite.examples.detection.model.TimeTable;
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private Handler myHandler;
     private TextView login_check;
     static boolean isLoggedIn;
-    AppDatabase db;
+    private AppDatabase db;
 
 
     @Override
@@ -55,8 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         isLoggedIn = false;
 
 
-        db = AppDatabase.getDatabase(LoginActivity.this);
-
+        db = AppDatabase.getInstance(getApplicationContext());
 
 
         myHandler = new Handler(){
@@ -79,8 +76,6 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void run(){
                     try {
-
-
                         Map<String, String> data = new HashMap<>();
                         data.put("userid", login_id.toString());
                         data.put("password", login_pw.toString());
@@ -144,8 +139,6 @@ public class LoginActivity extends AppCompatActivity {
                         if(statusCode < 400){
                             isLoggedIn = true;
 
-
-
                             String id_for_std = response2.parse().selectFirst("table").id();
                             System.out.println(id_for_std);
                             Connection.Response response3 = Jsoup.connect("https://api.everytime.kr/find/timetable/table")
@@ -169,15 +162,17 @@ public class LoginActivity extends AppCompatActivity {
                                     .cookie("etsid",cookie)
                                     .method(Connection.Method.POST)
                                     .execute();
-                            System.out.println(response3.parse().select("table"));
+
 
 
                             Elements subjects = response3.parse().select("subject");
 
-
-
-
+                            storeTable(login_id.getText().toString(),subjects);
                             myHandler.sendEmptyMessage(0);
+
+
+                            startActivity(new Intent(getApplicationContext(), DetectorActivity.class));
+                            finish();
                         }else{
                             myHandler.sendEmptyMessage(1000);
                             System.out.println(statusCode);
@@ -203,21 +198,40 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void dataStore(String loginId,String loginPw, Elements subjects){
-        User user = new User(loginId, loginPw);
-        db.userDAO().insert(user);
+    public void storeTable(String userId, Elements tables){
+        String name, place, time, professor;
+        String[] timevalue;
 
-        for(Element subject : subjects){
-            String name = subject.select("name").attr("value");
-            String place = subject.select("data").attr("place").trim();
-            String time = subject.select("name").val();
-            String name = subject.select("name").val();
-            
-            TimeTable timeTable = new TimeTable();
-            db.timeTableDAO(timeTable)
+        for(int i =0; i<tables.size(); i++){
+            time = "";
+            name = tables.get(i).select("name").val();
+            place =  tables.get(i).selectFirst("data").attr("place").split("-")[0];
+            professor = tables.get(i).select("professor").val();
+            timevalue =  tables.get(i).select("time").val().split("<br>") ;
+            if(timevalue.length !=0) {
+                for (String timeele : timevalue) {
+                    time = time + timeele.split(" ")[0] + timeele.split(" ")[1];
+                }
+            }
+
+            System.out.println(name);
+            System.out.println(place);
+            System.out.println(professor);
+            System.out.println(time);
+            if(db.timeTableDAO().findByName(name)==null){
+                final TimeTable timeTable = new TimeTable(
+                        name,
+                        time,
+                        place,
+                        professor,
+                        userId
+                );
+                db.timeTableDAO().insertTimetable(timeTable);
+            }
         }
-
+        return ;
     }
+
 
 
     // UI는 메인 스레드에서만 건드릴 수 있으므로 핸들러를 만들어줌.

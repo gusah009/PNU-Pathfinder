@@ -44,7 +44,7 @@ public class MultiBoxTracker {
   private static final float TEXT_SIZE_DIP = 18;
   private static final float MIN_SIZE = 16.0f;
   private static final int[] COLORS = {
-          Color.parseColor("#8FC0FF")
+          Color.parseColor("#F0CC00")
 //    Color.BLUE,
 //    Color.RED,
 //    Color.GREEN,

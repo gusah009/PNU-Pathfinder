@@ -1,7 +1,8 @@
-package org.tensorflow.lite.examples.detection.Room;
+package org.tensorflow.lite.examples.detection.model;
 
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "timetable")
@@ -14,7 +15,17 @@ public class TimeTable {
     private String professor;
     private String loginId;
 
-    public TimeTable(String name, String time, String place, String professor){
+    @Ignore
+    public TimeTable(String name, String time, String place, String professor, String loginId){
+        this.name = name;
+        this.time = time;
+        this.place = place;
+        this.professor = professor;
+        this.loginId = loginId;
+    }
+
+    public TimeTable(int id,String name, String time, String place, String professor, String loginId){
+        this.id = id;
         this.name = name;
         this.time = time;
         this.place = place;
