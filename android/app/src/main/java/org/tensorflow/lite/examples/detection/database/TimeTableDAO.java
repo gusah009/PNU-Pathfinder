@@ -22,6 +22,9 @@ public interface TimeTableDAO {
     @Query("SELECT * FROM timetable WHERE timetable.name LIKE :name")
     TimeTable findByName(String name);
 
+    @Query("SELECT * FROM timetable WHERE timetable.place LIKE :place")
+    TimeTable findByPlace(String place);
+
     @Insert
     void insertTimetable(TimeTable timeTable);
 

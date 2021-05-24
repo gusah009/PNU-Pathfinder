@@ -42,6 +42,9 @@
             android:screenOrientation="portrait">
 
         </activity>
+        <activity
+            android:name=".DetectedInfoActivity"
+            />
 
 
 

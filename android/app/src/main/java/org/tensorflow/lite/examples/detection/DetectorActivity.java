@@ -92,6 +92,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     tracker = new MultiBoxTracker(this);
 
+
     int cropSize = TF_OD_API_INPUT_SIZE;
 
     try {
@@ -184,6 +185,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
                 final Canvas canvas = new Canvas(cropCopyBitmap);
                 final Paint paint = new Paint();
+                String detected;
                 paint.setColor(Color.RED);
                 paint.setStyle(Style.STROKE);
                 paint.setStrokeWidth(2.0f);
@@ -210,7 +212,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                   }
                 }
 
-                tracker.trackResults(mappedRecognitions, currTimestamp);
+                detected = tracker.trackResults(mappedRecognitions, currTimestamp);
+
                 trackingOverlay.postInvalidate();
 
                 computingDetection = false;
@@ -219,9 +222,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         new Runnable() {
                           @Override
                           public void run() {
-                            showFrameInfo(previewWidth + "x" + previewHeight);
+                              showDetectedInfo(detected);
+//                            showFrameInfo(previewWidth + "x" + previewHeight);
                             showCropInfo(cropCopyBitmap.getWidth() + "x" + cropCopyBitmap.getHeight());
-                            showInference(lastProcessingTimeMs + "ms");
+//                            showInference(lastProcessingTimeMs + "ms");
                           }
                         });
               }

@@ -19,6 +19,7 @@ package org.tensorflow.lite.examples.detection;
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
@@ -36,12 +37,13 @@ import android.os.HandlerThread;
 import android.os.Trace;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
+
 import android.util.Size;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +52,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.nio.ByteBuffer;
+
+import org.tensorflow.lite.examples.detection.constants.Constants;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 
@@ -81,6 +85,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private BottomSheetBehavior<LinearLayout> sheetBehavior;
 
   protected TextView frameValueTextView, cropValueTextView, inferenceTimeTextView;
+  protected Button detected;
   protected ImageView bottomSheetArrowImageView;
   private ImageView plusImageView, minusImageView;
   private SwitchCompat apiSwitchCompat;
@@ -111,6 +116,16 @@ public abstract class CameraActivity extends AppCompatActivity
     gestureLayout = findViewById(R.id.gesture_layout);
     sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
     bottomSheetArrowImageView = findViewById(R.id.bottom_sheet_arrow);
+    detected = findViewById(R.id.detected);
+
+    detected.setOnClickListener(view -> {
+      if(detected.getText()!="찾는중..."){
+
+        Intent i = new Intent(getApplicationContext(), DetectedInfoActivity.class);
+        i.putExtra(Constants.Show_Detected_Info, detected.getText());
+        getApplicationContext().startActivity(i);
+      }
+    });
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
@@ -162,6 +177,8 @@ public abstract class CameraActivity extends AppCompatActivity
     frameValueTextView = findViewById(R.id.frame_info);
     cropValueTextView = findViewById(R.id.crop_info);
     inferenceTimeTextView = findViewById(R.id.inference_info);
+
+
 
     apiSwitchCompat.setOnCheckedChangeListener(this);
 
@@ -530,6 +547,15 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void showCropInfo(String cropInfo) {
     cropValueTextView.setText(cropInfo);
+  }
+
+  protected void showDetectedInfo(String detectedInfo){
+    if(detectedInfo != "none"){
+      detected.setText(detectedInfo);
+    }
+    else{
+      detected.setText("찾는중...");
+    }
   }
 
   protected void showInference(String inferenceTime) {
