@@ -4,27 +4,50 @@
     <uses-sdk />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
+<!--    <uses-feature android:name="android.hardware.camera" />-->
+<!--    <uses-feature android:name="android.hardware.camera.autofocus" />-->
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false"/>
+
+
+    <!--        android:usesCleartextTraffic="true"-->
 
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_main"
         android:label="@string/tfe_od_app_name"
         android:roundIcon="@mipmap/ic_main_round"
+        android:largeHeap="true"
+        android:hardwareAccelerated="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.ObjectDetection">
 
-        <activity
-            android:name=".DetectorActivity"
-            android:label="@string/tfe_od_app_name"
-            android:screenOrientation="portrait">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DetectorActivity"
+            android:label="@string/tfe_od_app_name"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".DetectedInfoActivity"
+            />
+
+
+
 
     </application>
 </manifest>

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>sample_jpg</folder>
+	<filename>0136.jpg</filename>
+	<path>/mnt/c/shasuri/assignment/3g_1s/sw_arch_exp/sample_images/sample_jpg/0136.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1920</width>
+		<height>925</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mecha</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>428</xmin>
+			<ymin>7</ymin>
+			<xmax>678</xmax>
+			<ymax>481</ymax>
+		</bndbox>
+	</object>
+</annotation>

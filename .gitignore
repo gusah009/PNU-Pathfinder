@@ -106,9 +106,16 @@ lint/tmp/
 ############## Android gitignore End ###############
 ############## Selenium Crwal gitignore Start ###############
 chromedriver.exe
-*.png
 test.py
 config.json
 .zip
 ############## Selenium Crwal gitignore End ###############
 *.zip
+
+#=> VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+labelImg/.vscode/settings.json

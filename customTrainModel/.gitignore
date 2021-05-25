@@ -98,6 +98,7 @@ ENV/
 .DS_Store
 
 *.jpg
+*.png
 
 *.record
 *.xml

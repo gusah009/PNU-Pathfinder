@@ -25,39 +25,52 @@
         android:layout_height="match_parent"
         android:background="@color/main_color"
         android:orientation="vertical">
-
-
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="org.tensorflow.demo.CameraActivity" >
+            android:layout_margin="10dp"
+            tools:context=".CameraActivity" >
         </FrameLayout>
-
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="250dp"
         android:background="@color/main_color"
         android:layout_gravity="bottom"
         android:gravity="center_vertical"
-        android:layout_marginBottom="70dp"
         >
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginLeft="30dp"
             android:src="@drawable/freshman"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여긴 무슨 건물이지?"
+            android:text="여긴 무슨 건물이지..?"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_margin="10dp"
             />
-        <TextView
-            android:id="@+id/building"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            />
+            <Button
+                android:id="@+id/detected"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radius"
+                android:text="찾는 중.."
+                android:textColor="@color/primary_color"
+
+                />
+        </LinearLayout>
 
     </LinearLayout>
 

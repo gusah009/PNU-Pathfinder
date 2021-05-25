@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:padding="20dp"
+        android:background="@color/ic_main_background">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:src="@drawable/freshman"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp">
+        </ImageView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="부산대 건물을 알려줘!">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@android:dimen/app_icon_size"
+            android:text="PATH-FINDER"
+            android:textStyle="bold"
+            android:textColor="@android:color/white">
+        </TextView>
+        <EditText
+            android:id="@+id/login_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="아이디를 입력해 주세요."
+            android:layout_margin="10dp"
+            />
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="비밀번호를 입력해 주세요."
+            android:layout_margin="10dp"
+            />
+        <TextView
+            android:id="@+id/login_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" "
+            android:layout_marginLeft="10dp"
+            android:textColor="@android:color/holo_red_light"
+            />
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="로그인"
+            android:textColor="@color/main_color"
+            android:background="@drawable/radius"
+            android:layout_margin="10dp"
+            android:textStyle="bold"
+            ></Button>
+    </LinearLayout>
+
+</LinearLayout>

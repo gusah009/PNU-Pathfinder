@@ -44,7 +44,7 @@ public class MultiBoxTracker {
   private static final float TEXT_SIZE_DIP = 18;
   private static final float MIN_SIZE = 16.0f;
   private static final int[] COLORS = {
-          Color.parseColor("#8FC0FF")
+          Color.parseColor("#F0CC00")
 //    Color.BLUE,
 //    Color.RED,
 //    Color.GREEN,
@@ -117,9 +117,11 @@ public class MultiBoxTracker {
     }
   }
 
-  public synchronized void trackResults(final List<Recognition> results, final long timestamp) {
+  public synchronized String trackResults(final List<Recognition> results, final long timestamp) {
     logger.i("Processing %d results from %d", results.size(), timestamp);
-    processResults(results);
+
+    String detected = processResults(results);
+    return detected;
   }
 
   private Matrix getFrameToCanvasMatrix() {
@@ -153,14 +155,21 @@ public class MultiBoxTracker {
           !TextUtils.isEmpty(recognition.title)
               ? String.format("%s", recognition.title)
               : String.format("");
+
+
       //            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.top,
       // labelString);
       borderedText.drawText(
           canvas, trackedPos.left + cornerSize, trackedPos.top, labelString , boxPaint);
     }
+//    if(trackedObjects.size()!=0){
+//      return trackedObjects.get(0).title;
+//    }else{
+//      return "none";
+//    }
   }
 
-  private void processResults(final List<Recognition> results) {
+  private String processResults(final List<Recognition> results) {
     final List<Pair<Float, Recognition>> rectsToTrack = new LinkedList<Pair<Float, Recognition>>();
 
     screenRects.clear();
@@ -191,7 +200,7 @@ public class MultiBoxTracker {
     trackedObjects.clear();
     if (rectsToTrack.isEmpty()) {
       logger.v("Nothing to track, aborting.");
-      return;
+      return "none";
     }
 
     Pair<Float, Recognition> potential = rectsToTrack.get(0);
@@ -208,6 +217,7 @@ public class MultiBoxTracker {
       trackedRecognition.title = potential.second.getTitle();
       trackedRecognition.color = COLORS[trackedObjects.size()];
       trackedObjects.add(trackedRecognition);
+
 //      buildingInfo.setText(trackedRecognition.title);
 
 
@@ -217,6 +227,7 @@ public class MultiBoxTracker {
 //        break;
 //      }
 //    }
+    return trackedRecognition.title;
   }
 
   private static class TrackedRecognition {
