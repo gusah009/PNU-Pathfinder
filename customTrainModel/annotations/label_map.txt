@@ -1,0 +1,12 @@
+item {
+  id: 1
+  name: 'zedo'
+}
+item {
+  id: 2
+  name: 'mecha'
+}
+item {
+  id: 3
+  name: 'unjuk'
+}
