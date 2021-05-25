@@ -1,0 +1,7 @@
+train
+checkpoints
+exported_model
+
+*.jpg
+*.png
+*.record

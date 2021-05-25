@@ -1,0 +1,26 @@
+<annotation>
+	<folder>test</folder>
+	<filename>0217.jpg</filename>
+	<path>../images/test/0217.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1920</width>
+		<height>925</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mecha</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1561</xmin>
+			<ymin>10</ymin>
+			<xmax>1920</xmax>
+			<ymax>436</ymax>
+		</bndbox>
+	</object>
+</annotation>
