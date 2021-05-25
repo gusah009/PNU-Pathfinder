@@ -1,0 +1,14 @@
+<annotation verified="yes">
+	<folder>sample_jpg</folder>
+	<filename>1156.jpg</filename>
+	<path>/mnt/c/shasuri/assignment/3g_1s/sw_arch_exp/sample_images/sample_jpg/1156.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1920</width>
+		<height>925</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+</annotation>
