@@ -123,7 +123,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
         Intent i = new Intent(getApplicationContext(), DetectedInfoActivity.class);
         i.putExtra(Constants.Show_Detected_Info, detected.getText());
-        getApplicationContext().startActivity(i);
+        getApplicationContext().startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
       }
     });
 
@@ -551,12 +551,21 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void showDetectedInfo(String detectedInfo){
     if(detectedInfo != "none"){
-      detected.setText(detectedInfo);
+//      detected.setText(detectedInfo);
+      if(detectedInfo.trim().equals("zedo")){
+        detected.setText("6공학관");
+      }else if(detectedInfo.trim().equals("mecha")){
+        detected.setText("융합기계관");
+      }else if(detectedInfo.trim().equals("unjuk")){
+        detected.setText("운죽정");
+      }else{
+        detected.setText("제6공학관");
+      }
     }
     else{
       detected.setText("찾는중...");
     }
-  }
+ }
 
   protected void showInference(String inferenceTime) {
     inferenceTimeTextView.setText(inferenceTime);

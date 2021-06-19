@@ -6,33 +6,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_gravity="center"
         android:gravity="center_horizontal"
         android:padding="20dp"
         android:background="@color/ic_main_background">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="150dp"
-            android:src="@drawable/freshman"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp">
+            android:src="@drawable/logo"
+            android:layout_marginTop="20dp">
         </ImageView>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/sebang"
             android:gravity="center"
+            android:text="부산대 건물을 알려줘!"
             android:textColor="@android:color/white"
-            android:text="부산대 건물을 알려줘!">
-        </TextView>
+            android:textSize="18dp"></TextView>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/sebang_bold"
             android:gravity="center"
-            android:textSize="@android:dimen/app_icon_size"
+            android:padding="10dp"
             android:text="PATH-FINDER"
-            android:textStyle="bold"
-            android:textColor="@android:color/white">
-        </TextView>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@android:color/white"
+            android:textSize="@android:dimen/app_icon_size"></TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            android:paddingBottom="50dp"
+            >
         <EditText
             android:id="@+id/login_id"
             android:layout_width="match_parent"
@@ -60,13 +70,16 @@
         <Button
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:text="로그인"
             android:textColor="@color/main_color"
             android:background="@drawable/radius"
             android:layout_margin="10dp"
             android:textStyle="bold"
+            android:textSize="20dp"
+            android:fontFamily="@font/sebang"
             ></Button>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

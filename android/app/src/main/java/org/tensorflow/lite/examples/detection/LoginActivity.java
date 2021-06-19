@@ -166,10 +166,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
                             Elements subjects = response3.parse().select("subject");
+                            System.out.println(subjects);
+                            if(db.timeTableDAO().getAll().size() <= 0){
+                                storeTable(login_id.getText().toString(),subjects);
+                            }
 
-                            storeTable(login_id.getText().toString(),subjects);
+
                             myHandler.sendEmptyMessage(0);
-
 
                             startActivity(new Intent(getApplicationContext(), DetectorActivity.class));
                             finish();
@@ -183,7 +186,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
 
-//                        System.out.println(response2.parse());
+
 
 
 
@@ -218,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println(place);
             System.out.println(professor);
             System.out.println(time);
-            if(db.timeTableDAO().findByName(name)==null){
+
                 final TimeTable timeTable = new TimeTable(
                         name,
                         time,
@@ -227,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
                         userId
                 );
                 db.timeTableDAO().insertTimetable(timeTable);
-            }
+
         }
         return ;
     }
