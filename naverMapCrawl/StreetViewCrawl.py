@@ -20,9 +20,8 @@ import platform
 
 import pyautogui
 
-officialStartURL = 'https://map.naver.com/v5/?c=14369598.7888581,4195396.7828313,16,0,0,0,dh&p=ghej0C2vIxkKwQOU_y1E3Q,-84.68,-8.03,80,Float'
-myStartURL = 'https://map.naver.com/v5/?c=14369506.8255584,4195578.3207735,16,0,0,0,dh&p=NDE-B1jWiK7HXCZxo_yU-w,0,0,80,Float'
-
+startPoint1 = "https://map.naver.com/v5/?c=14369591.9218964,4195404.0717501,16,0,0,0,dh&p=ImO6G5htZm11gggAlLO8dQ,-62.44,6.24,80,Float"
+startPoint2 = "https://map.naver.com/v5/?c=14369528.3139394,4195213.3590958,16,0,0,0,dh&p=7WD2t9pjQRsHknwHQi29Gw,-3.82,6.15,80,Float"
 
 index = 0
 
@@ -39,14 +38,14 @@ if platform.system() == 'Darwin': # MAC
 elif platform.system() == 'Windows':
   driver = webdriver.Chrome(executable_path='chromedriver')
 driver.maximize_window()
-driver.get(url=myStartURL)
+driver.get(url=startPoint2)
 
 def removeElement():
   try:
     script = """
       btn_area = document.getElementsByClassName('btn_area');
       btn_close = document.getElementsByClassName('btn_close');
-      btn_area[2].style.display = 'none';
+      btn_area[1].style.display = 'none';
       btn_close[0].style.display = 'none';
       bottom_area = document.getElementsByClassName('panorama_location_area')[0].parentNode.parentNode.childNodes;
       console.log(bottom_area);
@@ -123,15 +122,20 @@ def initCrawler():
   moveLeftCamera()
   goFront()
   global log
-  # 쪽문
-  log['14369445.9148015,4195757.4700585'] = True
-  log['14369454.2751015,4195764.6360300'] = True
-  # 북문
-  log['14369453.0807729,4195936.6193436'] = True
-  # 어느문
-  log['14368732.9006470,4195452.9162740'] = True
-  log['14368737.6779613,4195478.5943382'] = True
-  log['14369437.5545015,4195172.2490607'] = True
+  # 정문
+  log['14369591.9218964,4195404.0717501'] = True
+  # 학생회관
+  log['14369487.6377975,4195520.9894736'] = True
+  # 인문관앞
+  log['14369323.8868265,4195514.2842857'] = True
+  # 인문관 - 운죽정 사이
+  log['14369271.2772352,4195393.6733692'] = True
+  # 인문관 - 운죽정 사이
+  log['14369271.2772352,4195393.6733692'] = True
+  # 운죽정 뒤편
+  log['14369281.8414548,4195292.3067035'] = True
+  # 제도관 뒤편
+  log['14369410.7828210,4195233.9919912'] = True
 
   with open('url_log_data.txt', "r") as logs_url:
     for log_url in logs_url:
